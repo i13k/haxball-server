@@ -35,8 +35,8 @@ For the technical people here (who may want to create their own `gamefiles.zip`)
 * this response is `{"url":"ws://" + window.location.host + "/ws/host"}`
 * `https://www.haxball.com/rs/` is replaced with `/`
 * `wss://p2p.haxball.com/"` is replaced with `"ws://" + window.location.host + "/ws/`
-* 
-""" WARNING """
+
+## WARNING
 No copyright infringement intended
 All game files were made by Mario Carbajal (aka basro) and modified by me
 BTW, great job, these games *are* really nice to play
