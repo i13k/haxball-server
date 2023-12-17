@@ -6,7 +6,7 @@ To install the server, you need:
 * the `geoip2` module and the GeoLite2-City.mmdb file
 * the `tomli` module
 
-To start the server, just type `python server.py ` in the terminal.
+To start the server, just type `python server.py` in the terminal.
 The server will be running at port 8000.
 To enable access to the server in nginx, you can put this in your nginx.conf:
 ```
