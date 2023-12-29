@@ -1,5 +1,5 @@
 # haxball-server
-A drop-in replacement for the HaxBall p2p.haxball.com and p2p2.haxball.com server. It also works for WebLiero, since the two games are basically the same thing when it comes to the networking side.
+A replacement for the HaxBall p2p.haxball.com and p2p2.haxball.com server. It also works for WebLiero, since the two games are basically the same thing when it comes to the networking side.
 To install the server, you need:
 * Python 3.11
 * the Sanic framework
