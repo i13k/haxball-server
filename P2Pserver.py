@@ -1,4 +1,4 @@
-# HaxBall Server v2.1 (now uses Redis)
+# HaxBall Server v2.2
 import asyncio
 import websockets
 import struct
@@ -9,12 +9,12 @@ from random import choices
 r = redis.Redis()
 
 rooms = {}
+clients = []
 
 def update_room_list():
     room_list = b"\x00"
 
     for room_id in rooms:
-        room = rooms[room_id]
         room_data = r.get(room_id)
 
         room_list += struct.pack(">H", len(room_id))
@@ -26,20 +26,20 @@ def update_room_list():
 async def client(ws, room_id):
     try:
         client_ip = ws.remote_address[0]
-        rooms[room_id].append(ws)
-        client_id = len(rooms[room_id]) - 1
+        clients.append(ws)
+        client_id = len(clients) - 1
         msg = await ws.recv()
-        await rooms[room_id][0].send(b"\x01" + struct.pack("I", client_id) + struct.pack("B", len(client_ip)) + client_ip.encode("utf-8") + msg[1:])
+        await rooms[room_id].send(b"\x01" + struct.pack("I", client_id) + struct.pack("B", len(client_ip)) + client_ip.encode("utf-8") + msg[1:])
         await ws.recv()
         await ws.recv()
     except (Exception, BaseException):
-        rooms[room_id].pop(client_id)
+        clients.pop(client_id)
 
 async def host(ws):
     room_id = "".join(choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-", k=11))
     while room_id in rooms:
         room_id = "".join(choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-", k=11))
-    rooms[room_id] = [ws]
+    rooms[room_id] = ws
     await ws.send(b"\x05" + struct.pack("B", len(room_id)) + room_id.encode("utf-8") + b"\x27thr1.AAAAAGV-zqIrB3ZxMgZM2Q.Abv5uh9vAUw")
     while True:
         try:
@@ -52,12 +52,12 @@ async def host(ws):
                     code = struct.unpack(">H", msg[5:])[0]
                     if code < 1000 or code > 4110:
                         code = 4100
-                    await rooms[room_id][client_id].close(code)
-                rooms[room_id].pop(client_id)
+                    await clients[client_id].close(code)
+                clients.pop(client_id)
 
             elif msg_type == 1:
                 client_id = struct.unpack("I", msg[1:5])[0]
-                await rooms[room_id][client_id].send(b"\x01" + msg[5:])
+                await clients[client_id].send(b"\x01" + msg[5:])
 
             elif msg_type == 7:
                 r.set(room_id, msg[1:])
