@@ -20,10 +20,10 @@ Then for each room:
 * uint8 -- password flag [0/1]
 * uint8 -- player limit
 * uint8 -- players connected
-## `/api/geo` -- Geolocalization Api
+## `/api/geo` -- Geolocalization
 ### Response format:
 `{"data":{"code":"CC","lat":0.0000,"lon":0.0000}}`
-(where CC -- two-letter country code, [lat, lon] -- latitude and longitude
+(where CC -- two-letter country code, [lat, lon] -- latitude and longitude)
 ## `/api/notice` -- Notice
 ### Response format:
 `{"data":{"content":"ABCDE"}}`
